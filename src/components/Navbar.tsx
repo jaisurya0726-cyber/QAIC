@@ -29,12 +29,11 @@ export const Navbar: React.FC = () => {
             </div>
             <div>
               <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">Launch Trajectory & Mission Optimisation</span>
-              <span className="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-semibold bg-cyan-100 text-cyan-800 rounded-full">QAOA Engine v2.4</span>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden xl:flex items-center space-x-1">
+          <nav className="hidden lg:flex items-center space-x-1 overflow-x-auto max-w-xl xl:max-w-3xl scrollbar-none shrink-0 py-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
