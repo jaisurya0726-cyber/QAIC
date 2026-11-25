@@ -1,0 +1,6 @@
+{
+  "name": "Launch Trajectory and Mission-Planning Optimisation Using Quantum Computing",
+  "description": "Interactive web application optimising rocket launch trajectories, launch windows, payload allocation, fuel consumption, mission costs, and mission risks using classical optimisation and QAOA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
