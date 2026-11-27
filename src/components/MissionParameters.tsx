@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Sliders, Rocket, Shield, Play, RotateCcw, CheckCircle2, Cpu, BarChart3, Atom, FileText, Compass } from 'lucide-react';
+import Papa from 'papaparse';
+import { Sliders, Rocket, Shield, Play, RotateCcw, CheckCircle2, Cpu, BarChart3, Atom, FileText, Compass, Upload, FileSpreadsheet } from 'lucide-react';
 import { mockRockets, mockPayloads, mockLaunchWindows } from '../data/mockData';
 import { MissionParameters, OptimizationResult } from '../types';
 
@@ -44,7 +45,47 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
 
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [successMessage, setSuccessMessage] = useState(false);
+  const [csvUploadStatus, setCsvUploadStatus] = useState<string | null>(null);
   const [outputTab, setOutputTab] = useState<'summary' | 'classical' | 'qubo' | 'qaoa' | 'validation'>('summary');
+
+  const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        if (results.data && results.data.length > 0) {
+          const row: any = results.data[0];
+          setParams(prev => ({
+            ...prev,
+            rocketMass: Number(row.rocketMass || row['Rocket Mass'] || prev.rocketMass),
+            fuelMass: Number(row.fuelMass || row['Fuel Mass'] || prev.fuelMass),
+            payloadMass: Number(row.payloadMass || row['Payload Mass'] || prev.payloadMass),
+            thrust: Number(row.thrust || row['Thrust'] || prev.thrust),
+            specificImpulse: Number(row.specificImpulse || row['Specific Impulse'] || prev.specificImpulse),
+            launchAngle: Number(row.launchAngle || row['Launch Angle'] || prev.launchAngle),
+            launchAltitude: Number(row.launchAltitude || row['Launch Altitude'] || prev.launchAltitude),
+            initialVelocity: Number(row.initialVelocity || row['Initial Velocity'] || prev.initialVelocity),
+            targetAltitude: Number(row.targetAltitude || row['Target Altitude'] || prev.targetAltitude),
+            deltaV: Number(row.deltaV || row['Delta-V'] || prev.deltaV),
+            launchWindow: String(row.launchWindow || row['Launch Window'] || prev.launchWindow),
+            windSpeed: Number(row.windSpeed || row['Wind Speed'] || prev.windSpeed),
+            temperature: Number(row.temperature || row['Temperature'] || prev.temperature),
+            launchCost: Number(row.launchCost || row['Launch Cost'] || prev.launchCost),
+            riskScore: Number(row.riskScore || row['Risk Score'] || prev.riskScore),
+          }));
+          setCsvUploadStatus('CSV parameters successfully imported and form updated!');
+          setTimeout(() => setCsvUploadStatus(null), 5000);
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        setCsvUploadStatus('Error parsing CSV file.');
+      }
+    });
+  };
 
   const handleChange = (field: keyof MissionParameters, value: any) => {
     setParams(prev => ({ ...prev, [field]: value }));
@@ -136,6 +177,30 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
 
         <form onSubmit={handleSubmit} className="max-w-4xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-8 mb-12">
           
+          {/* CSV File Upload Component for 15 Parameters */}
+          <div className="p-5 bg-blue-50/60 rounded-2xl border border-blue-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 text-blue-900 font-bold text-xs uppercase tracking-wider">
+                <FileSpreadsheet className="w-4 h-4 text-blue-700" />
+                <span>Import 15 Parameters via CSV</span>
+              </div>
+              <label className="px-4 py-2 bg-blue-900 text-white rounded-xl text-xs font-semibold hover:bg-blue-800 cursor-pointer shadow-xs transition-all flex items-center space-x-1.5">
+                <Upload className="w-3.5 h-3.5" />
+                <span>Upload CSV File</span>
+                <input type="file" accept=".csv" onChange={handleCsvUpload} className="hidden" />
+              </label>
+            </div>
+            <p className="text-xs text-slate-600">
+              Upload a CSV file containing headers matching the 15 parameters to automatically update the form state upon successful parsing.
+            </p>
+            {csvUploadStatus && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-xl text-xs font-semibold flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>{csvUploadStatus}</span>
+              </div>
+            )}
+          </div>
+
           {/* Rocket & Payload Selection */}
           <div className="space-y-4">
             <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2 border-b border-slate-100 pb-2">
@@ -187,8 +252,13 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
                   type="number"
                   value={params.rocketMass}
                   onChange={(e) => handleChange('rocketMass', Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                  className={`w-full px-3 py-2 rounded-xl border text-xs text-slate-800 bg-white font-mono ${
+                    params.rocketMass > 8000000 || params.rocketMass < 1000 ? 'border-amber-500 bg-amber-50/30' : 'border-slate-300'
+                  }`}
                 />
+                {(params.rocketMass > 8000000 || params.rocketMass < 1000) && (
+                  <span className="text-[10px] text-amber-600 font-semibold block mt-1">⚠️ Outside standard aerospace bounds (1k - 8M kg).</span>
+                )}
               </div>
 
               <div>
@@ -198,8 +268,13 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
                   type="number"
                   value={params.fuelMass}
                   onChange={(e) => handleChange('fuelMass', Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                  className={`w-full px-3 py-2 rounded-xl border text-xs text-slate-800 bg-white font-mono ${
+                    params.fuelMass > params.rocketMass ? 'border-red-500 bg-red-50/30' : 'border-slate-300'
+                  }`}
                 />
+                {params.fuelMass > params.rocketMass && (
+                  <span className="text-[10px] text-red-600 font-semibold block mt-1">❌ Fuel mass cannot exceed total rocket mass!</span>
+                )}
               </div>
 
               <div>
@@ -311,8 +386,13 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
                   step="0.1"
                   value={params.windSpeed}
                   onChange={(e) => handleChange('windSpeed', Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                  className={`w-full px-3 py-2 rounded-xl border text-xs text-slate-800 bg-white font-mono ${
+                    params.windSpeed > 12 ? 'border-amber-500 bg-amber-50/30' : 'border-slate-300'
+                  }`}
                 />
+                {params.windSpeed > 12 && (
+                  <span className="text-[10px] text-amber-600 font-semibold block mt-1">⚠️ High wind (&gt;12 m/s) violates range safety!</span>
+                )}
               </div>
 
               <div>
@@ -347,8 +427,13 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
                   step="0.1"
                   value={params.riskScore}
                   onChange={(e) => handleChange('riskScore', Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                  className={`w-full px-3 py-2 rounded-xl border text-xs text-slate-800 bg-white font-mono ${
+                    params.riskScore > 25 ? 'border-amber-500 bg-amber-50/30' : 'border-slate-300'
+                  }`}
                 />
+                {params.riskScore > 25 && (
+                  <span className="text-[10px] text-amber-600 font-semibold block mt-1">⚠️ Elevated mission risk (&gt;25%).</span>
+                )}
               </div>
             </div>
           </div>
