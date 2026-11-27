@@ -63,10 +63,23 @@ export interface MissionParameters {
   launchSite: string;
   launchDate: string;
   targetOrbit: string;
+  rocketMass: number; // 1. Rocket Mass: Total rocket weight
+  fuelMass: number; // 2. Fuel Mass: Available Fuel
+  payloadMass: number; // 3. Payload Mass: Satellite or Cargo Weight
+  thrust: number; // 4. Thrust: Engine forces
+  specificImpulse: number; // 5. Specific Impulse (Isp): Engine Efficiency
+  launchAngle: number; // 6. Launch Angle: Rocket Launch Direction
+  launchAltitude: number; // 7. Launch Altitude: Launch-site elevation
   initialAltitude: number;
-  targetAltitude: number;
-  initialVelocity: number;
+  targetAltitude: number; // 9. Target Altitude: Desired orbital altitude
+  initialVelocity: number; // 8. Initial Velocity: Initial rocket velocity
   targetVelocity: number;
+  deltaV: number; // 10. Delta-V: Required velocity change
+  launchWindow: string; // 11. Launch Window: Suitable launch time
+  windSpeed: number; // 12. Wind Speed: Atmospheric wind conditions
+  temperature: number; // 13. Temperature: Weather Conditions
+  launchCost: number; // 14. Launch Cost: Estimated mission expenditure
+  riskScore: number; // 15. Risk Score: Estimated mission risk
   inclination: number;
   fuelWeight: number;
   costWeight: number;

@@ -60,7 +60,7 @@ export const HeroSection: React.FC = () => {
             <div className="relative mx-auto max-w-md lg:max-w-none">
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-blue-600 to-cyan-500 opacity-20 blur-xl"></div>
               
-              <div className="relative bg-white rounded-2xl border border-slate-200 p-6 shadow-xl space-y-6">
+              <div className="relative bg-white rounded-2xl border border-slate-200 p-6 shadow-xl space-y-6 hover:shadow-2xl hover:border-blue-300 hover:-translate-y-1 transition-all duration-300">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                   <div className="flex items-center space-x-3">
                     <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>

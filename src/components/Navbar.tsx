@@ -1,8 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Rocket, Atom, Database, Cpu, BarChart3, Sliders, PlayCircle, ShieldCheck, FileText, Menu, X, Orbit } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(progress);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navItems = [
     { label: 'Overview', href: '#intro', icon: Rocket },
@@ -50,7 +63,7 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Mobile menu button */}
-          <div className="xl:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none"
@@ -63,7 +76,7 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 shadow-lg max-h-[80vh] overflow-y-auto">
+        <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 shadow-lg max-h-[80vh] overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -80,6 +93,14 @@ export const Navbar: React.FC = () => {
           })}
         </div>
       )}
+
+      {/* Scroll Progress Bar */}
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-slate-100">
+        <div
+          className="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 transition-all duration-150"
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
+      </div>
     </header>
   );
 };

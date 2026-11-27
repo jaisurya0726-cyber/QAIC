@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sliders, Rocket, Shield, Play, RotateCcw, CheckCircle2, Cpu, BarChart3, Atom, FileText } from 'lucide-react';
+import { Sliders, Rocket, Shield, Play, RotateCcw, CheckCircle2, Cpu, BarChart3, Atom, FileText, Compass } from 'lucide-react';
 import { mockRockets, mockPayloads, mockLaunchWindows } from '../data/mockData';
 import { MissionParameters, OptimizationResult } from '../types';
 
@@ -15,10 +15,23 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
     launchSite: mockLaunchWindows[0].site,
     launchDate: mockLaunchWindows[0].date,
     targetOrbit: 'LEO',
+    rocketMass: 640000,
+    fuelMass: 555000,
+    payloadMass: 7800,
+    thrust: 19000,
+    specificImpulse: 345,
+    launchAngle: 85.0,
+    launchAltitude: 0.0,
     initialAltitude: 0,
     targetAltitude: 550,
     initialVelocity: 0.1,
     targetVelocity: 7.82,
+    deltaV: 9.4,
+    launchWindow: '11:15 IST',
+    windSpeed: 4.2,
+    temperature: 26.5,
+    launchCost: 98.5,
+    riskScore: 2.4,
     inclination: 28.5,
     fuelWeight: 0.4,
     costWeight: 0.3,
@@ -44,10 +57,23 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
       launchSite: mockLaunchWindows[0].site,
       launchDate: mockLaunchWindows[0].date,
       targetOrbit: 'LEO',
+      rocketMass: 640000,
+      fuelMass: 555000,
+      payloadMass: 7800,
+      thrust: 19000,
+      specificImpulse: 345,
+      launchAngle: 85.0,
+      launchAltitude: 0.0,
       initialAltitude: 0,
       targetAltitude: 550,
       initialVelocity: 0.1,
       targetVelocity: 7.82,
+      deltaV: 9.4,
+      launchWindow: '11:15 IST',
+      windSpeed: 4.2,
+      temperature: 26.5,
+      launchCost: 98.5,
+      riskScore: 2.4,
       inclination: 28.5,
       fuelWeight: 0.4,
       costWeight: 0.3,
@@ -146,49 +172,182 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
             </div>
           </div>
 
-          {/* Launch & Trajectory Parameters */}
+          {/* 15 Essential Mission Parameters */}
           <div className="space-y-4">
             <h3 className="text-base font-bold text-slate-900 flex items-center space-x-2 border-b border-slate-100 pb-2">
-              <Shield className="w-4 h-4 text-indigo-700" />
-              <span>Launch Site & Orbital Trajectory</span>
+              <Compass className="w-4 h-4 text-indigo-700" />
+              <span>15 Key Mission Parameters & Specifications</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Launch Site</label>
-                <select
-                  value={params.launchSite}
-                  onChange={(e) => handleChange('launchSite', e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-blue-900"
-                >
-                  {mockLaunchWindows.map(w => (
-                    <option key={w.id} value={w.site}>{w.site}</option>
-                  ))}
-                </select>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">1. Rocket Mass (kg)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Total rocket weight</span>
+                <input
+                  type="number"
+                  value={params.rocketMass}
+                  onChange={(e) => handleChange('rocketMass', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Target Orbit</label>
-                <select
-                  value={params.targetOrbit}
-                  onChange={(e) => handleChange('targetOrbit', e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-blue-900"
-                >
-                  <option value="LEO">LEO (550 km SSO)</option>
-                  <option value="MEO">MEO (20,200 km GPS)</option>
-                  <option value="GTO">GTO / GEO (35,786 km)</option>
-                  <option value="Lunar">Lunar NRHO</option>
-                  <option value="Martian">Martian Transfer Orbit</option>
-                </select>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">2. Fuel Mass (kg)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Available Fuel</span>
+                <input
+                  type="number"
+                  value={params.fuelMass}
+                  onChange={(e) => handleChange('fuelMass', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Target Altitude (km)</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">3. Payload Mass (kg)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Satellite or Cargo Weight</span>
+                <input
+                  type="number"
+                  value={params.payloadMass}
+                  onChange={(e) => handleChange('payloadMass', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">4. Thrust (kN)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Engine forces</span>
+                <input
+                  type="number"
+                  value={params.thrust}
+                  onChange={(e) => handleChange('thrust', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">5. Specific Impulse (s)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Engine Efficiency</span>
+                <input
+                  type="number"
+                  value={params.specificImpulse}
+                  onChange={(e) => handleChange('specificImpulse', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">6. Launch Angle (°)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Rocket Launch Direction</span>
+                <input
+                  type="number"
+                  value={params.launchAngle}
+                  onChange={(e) => handleChange('launchAngle', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">7. Launch Altitude (m)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Launch-site elevation</span>
+                <input
+                  type="number"
+                  value={params.launchAltitude}
+                  onChange={(e) => handleChange('launchAltitude', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">8. Initial Velocity (km/s)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Initial rocket velocity</span>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={params.initialVelocity}
+                  onChange={(e) => handleChange('initialVelocity', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">9. Target Altitude (km)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Desired orbital altitude</span>
                 <input
                   type="number"
                   value={params.targetAltitude}
                   onChange={(e) => handleChange('targetAltitude', Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-blue-900 font-mono"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">10. Delta-V (km/s)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Required velocity change</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={params.deltaV}
+                  onChange={(e) => handleChange('deltaV', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">11. Launch Window</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Suitable launch time</span>
+                <input
+                  type="text"
+                  value={params.launchWindow}
+                  onChange={(e) => handleChange('launchWindow', e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">12. Wind Speed (m/s)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Atmospheric wind conditions</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={params.windSpeed}
+                  onChange={(e) => handleChange('windSpeed', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">13. Temperature (°C)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Weather Conditions</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={params.temperature}
+                  onChange={(e) => handleChange('temperature', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">14. Launch Cost ($M)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Estimated mission expenditure</span>
+                <input
+                  type="number"
+                  step="0.5"
+                  value={params.launchCost}
+                  onChange={(e) => handleChange('launchCost', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-0.5">15. Risk Score (%)</label>
+                <span className="text-[10px] text-slate-500 block mb-1">Estimated mission risk</span>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={params.riskScore}
+                  onChange={(e) => handleChange('riskScore', Number(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white font-mono"
                 />
               </div>
             </div>
@@ -302,30 +461,35 @@ export const MissionParametersPanel: React.FC<MissionParametersProps> = ({ onOpt
 
               <div className="flex flex-wrap gap-2">
                 <button
+                  type="button"
                   onClick={() => setOutputTab('summary')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${outputTab === 'summary' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                 >
                   Summary
                 </button>
                 <button
+                  type="button"
                   onClick={() => setOutputTab('classical')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${outputTab === 'classical' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                 >
                   Classical
                 </button>
                 <button
+                  type="button"
                   onClick={() => setOutputTab('qubo')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${outputTab === 'qubo' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                 >
                   QUBO & Ising
                 </button>
                 <button
+                  type="button"
                   onClick={() => setOutputTab('qaoa')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${outputTab === 'qaoa' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                 >
                   QAOA Result
                 </button>
                 <button
+                  type="button"
                   onClick={() => setOutputTab('validation')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${outputTab === 'validation' ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
                 >

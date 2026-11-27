@@ -20,6 +20,7 @@ import { ScenarioSection } from './components/ScenarioSection';
 import { SensitivitySection } from './components/SensitivitySection';
 import { HistoryReportSection } from './components/HistoryReportSection';
 import { AboutSection } from './components/AboutSection';
+import { ScrollProgressBar } from './components/ScrollProgressBar';
 import { OptimizationResult, MissionParameters } from './types';
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-blue-900 selection:text-white">
+      <ScrollProgressBar />
       <Navbar />
       <HeroSection />
       <WorkflowSection />

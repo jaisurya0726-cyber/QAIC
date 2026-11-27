@@ -208,10 +208,14 @@ export const WorkflowSection: React.FC = () => {
             return (
               <div
                 key={step.num}
-                className={`rounded-2xl border transition-all ${
+                className={`group relative rounded-2xl border transition-all ${
                   isExpanded ? 'border-blue-900 shadow-md bg-white' : 'border-slate-200 bg-slate-50/50 hover:bg-white'
                 }`}
               >
+                {/* Hover Tooltip */}
+                <div className="absolute -top-11 left-1/2 -translate-x-1/2 z-20 px-3 py-1.5 bg-slate-900 text-white text-[11px] font-medium rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none hidden sm:block max-w-md text-center truncate">
+                  <span className="text-cyan-400 font-bold mr-1">Module Function:</span> {step.explanation}
+                </div>
                 <div
                   onClick={() => toggleStep(step.num)}
                   className="flex items-center justify-between p-5 cursor-pointer select-none"
