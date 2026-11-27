@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { ShieldAlert, AlertTriangle, CheckCircle2, TrendingUp, Compass, Sparkles, Bot, ArrowRight } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, CheckCircle2, TrendingUp, Compass, Sparkles, Bot } from 'lucide-react';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 export const RiskSection: React.FC = () => {
   const [isGeneratingAdvice, setIsGeneratingAdvice] = useState(false);
-  const [adviceGenerated, setAdviceGenerated] = useState(true);
 
   const risks = [
     { id: 1, name: 'Fuel Shortage Risk', score: 14.2, category: 'Low', color: 'bg-emerald-100 text-emerald-800 border-emerald-300', desc: 'Propellant margin is 15.4% above minimum requirement.', action: 'Maintain current staging profile.' },
@@ -18,11 +18,18 @@ export const RiskSection: React.FC = () => {
 
   const highRisks = risks.filter(r => r.score >= 25.0);
 
+  const riskTrendData = [
+    { run: 'Run #1 (Initial)', overallRisk: 38.5, budgetRisk: 52.0, trajectoryRisk: 35.0 },
+    { run: 'Run #2 (Tuned Mass)', overallRisk: 32.0, budgetRisk: 48.0, trajectoryRisk: 30.2 },
+    { run: 'Run #3 (Thrust Opt)', overallRisk: 29.5, budgetRisk: 45.5, trajectoryRisk: 28.9 },
+    { run: 'Run #4 (QAOA Applied)', overallRisk: 26.8, budgetRisk: 42.0, trajectoryRisk: 26.5 },
+    { run: 'Run #5 (Current)', overallRisk: 24.1, budgetRisk: 45.0, trajectoryRisk: 28.4 },
+  ];
+
   const handleRefreshAdvice = () => {
     setIsGeneratingAdvice(true);
     setTimeout(() => {
       setIsGeneratingAdvice(false);
-      setAdviceGenerated(true);
     }, 1200);
   };
 
@@ -33,11 +40,11 @@ export const RiskSection: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold mb-3">
             <ShieldAlert className="w-3.5 h-3.5 text-amber-700" />
-            <span>Step 16: Intelligent Mission Risk Assessment & AI Advisor</span>
+            <span>Step 16: Intelligent Mission Risk Assessment & Trend Analysis</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Comprehensive Risk Scoring & AI Mitigation Advisor</h2>
+          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Comprehensive Risk Scoring, AI Advisor & Longitudinal Trends</h2>
           <p className="text-slate-600 mt-2 text-sm">
-            Evaluates 8 critical risk vectors and utilizes an AI Advisor to parse calculated risk scores into step-by-step mitigation strategies for high-risk categories.
+            Evaluates critical risk vectors, provides step-by-step AI mitigation advice, and visualizes longitudinal risk trends over sequential parameter tuning runs.
           </p>
         </div>
 
@@ -49,7 +56,7 @@ export const RiskSection: React.FC = () => {
             </div>
             <div>
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Overall Mission Risk Score</div>
-              <div className="text-xl font-extrabold text-slate-900">Moderate Risk (Level II)</div>
+              <div className="text-xl font-extrabold text-slate-900">Moderate Risk (Level II) - Improving Trend</div>
               <div className="text-xs text-slate-600 mt-0.5">All hard constraints satisfied. AI Mitigation Advisor recommendations ready below.</div>
             </div>
           </div>
@@ -57,6 +64,38 @@ export const RiskSection: React.FC = () => {
           <span className="px-4 py-2 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs">
             MODERATE RISK – YELLOW
           </span>
+        </div>
+
+        {/* Longitudinal Risk Trend Analysis Chart */}
+        <div className="max-w-4xl mx-auto mb-12 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+            <div className="flex items-center space-x-2">
+              <TrendingUp className="w-5 h-5 text-blue-900" />
+              <h3 className="text-base font-bold text-slate-900">Longitudinal Risk Trend Analysis</h3>
+            </div>
+            <span className="text-xs font-mono bg-blue-50 text-blue-800 px-3 py-1 rounded-full font-semibold">
+              Mission Safety Trajectory: Improving (-37% risk reduction)
+            </span>
+          </div>
+
+          <p className="text-xs text-slate-600">
+            Visualizes historical changes in mission risk scores across sequential parameter tuning iterations, confirming that continuous optimization is making the mission safer.
+          </p>
+
+          <div className="w-full h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={riskTrendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="run" tick={{ fontSize: 11 }} stroke="#64748b" />
+                <YAxis tick={{ fontSize: 11 }} stroke="#64748b" domain={[0, 60]} />
+                <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#fff', fontSize: '12px' }} />
+                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} />
+                <Line type="monotone" dataKey="overallRisk" name="Overall Risk Score (%)" stroke="#2563eb" strokeWidth={3} dot={{ r: 5 }} activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="budgetRisk" name="Budget Risk (%)" stroke="#d97706" strokeWidth={2} strokeDasharray="4 4" />
+                <Line type="monotone" dataKey="trajectoryRisk" name="Trajectory Risk (%)" stroke="#059669" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* AI Advisor Panel for High-Risk Categories */}
