@@ -21,6 +21,7 @@ import { SensitivitySection } from './components/SensitivitySection';
 import { HistoryReportSection } from './components/HistoryReportSection';
 import { AboutSection } from './components/AboutSection';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
+import { SystemHealthMonitor } from './components/SystemHealthMonitor';
 import { OptimizationResult, MissionParameters } from './types';
 import { Command, X } from 'lucide-react';
 
@@ -68,6 +69,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased selection:bg-blue-900 selection:text-white relative">
       <ScrollProgressBar />
+      <SystemHealthMonitor />
       <Navbar />
 
       {/* Keyboard Shortcut Toast Notification */}
@@ -85,7 +87,7 @@ export default function App() {
           <span>Shortcuts: <strong className="text-white">Ctrl+O</strong> (Optimize), <strong className="text-white">Ctrl+P</strong> (Simulation), <strong className="text-white">Ctrl+E</strong> (Report)</span>
           <button 
             onClick={() => setShowShortcutToast(false)}
-            className="text-slate-400 hover:text-white ml-2 transition-colors"
+            className="text-slate-400 hover:text-white ml-2 transition-colors cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
