@@ -2,9 +2,9 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
+  scroll-padding-top: 80px;
 }
 
-section {
-  scroll-snap-align: start;
+body {
+  overflow-x: hidden;
 }
